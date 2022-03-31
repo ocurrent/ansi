@@ -1,4 +1,8 @@
-Split into its own repository.
+### 0.5.0
+
+* Rename to `ansi` (#2, @samoht)
+* ansi: 24-bit colour parsing (#1, @copy)
+* Split into its own repository.
 
 ### v0.3 and v0.4
 

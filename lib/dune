@@ -1,5 +1,5 @@
 (library
- (public_name current_ansi)
+ (public_name ansi)
  (libraries
    astring
    fmt
