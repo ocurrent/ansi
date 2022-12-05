@@ -1,3 +1,63 @@
 (test
  (name test)
- (libraries alcotest ansi))
+ (libraries alcotest ansi)
+ (modules test))
+
+(executable
+ (name color_4bit)
+ (modules color_4bit))
+
+(executable
+ (name color_8bit)
+ (modules color_8bit))
+
+(executable
+ (name color_24bit)
+ (modules color_24bit))
+
+(executable
+ (name ansi)
+ (modules ansi)
+ (libraries ansi))
+
+(rule
+ (target color_4bit.actual)
+ (action
+  (with-stdout-to
+   color_4bit.actual
+   (pipe-stdout
+    (run %{dep:color_4bit.exe})
+    (run %{dep:ansi.exe} 4bit)))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff color_4bit.html color_4bit.actual)))
+
+(rule
+ (target color_8bit.actual)
+ (action
+  (with-stdout-to
+   color_8bit.actual
+   (pipe-stdout
+    (run %{dep:color_8bit.exe})
+    (run %{dep:ansi.exe} 8bit)))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff color_8bit.html color_8bit.actual)))
+
+(rule
+ (target color_24bit.actual)
+ (action
+  (with-stdout-to
+   color_24bit.actual
+   (pipe-stdout
+    (run %{dep:color_24bit.exe})
+    (run %{dep:ansi.exe} 24bit)))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff color_24bit.html color_24bit.actual)))
