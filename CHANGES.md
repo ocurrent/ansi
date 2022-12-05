@@ -1,3 +1,8 @@
+### unreleased
+
+* Add `Ansi.strip` to strip ANSI escape sequences part of a string.
+  (#7, @MisterDA)
+
 ### 0.5.0
 
 * Rename to `ansi` (#2, @samoht)

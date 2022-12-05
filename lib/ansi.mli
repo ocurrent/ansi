@@ -12,3 +12,7 @@ val process : t -> string -> string
 
 val css : string
 (** Some default CSS rules to make the HTML output appear in colour. *)
+
+val strip : string -> string
+(** [strip data] reads in [data] and strips out ANSI sequences. It doesn't remember partial
+    sequences between calls to [strip]. *)
