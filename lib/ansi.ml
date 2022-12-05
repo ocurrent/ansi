@@ -101,3 +101,25 @@ let process t data =
   Buffer.contents output
 
 let css = Style.css
+
+let strip str =
+  let len = String.length str in
+  let buf = Buffer.create len in
+  let rec loop start i =
+    if i = len then (
+      if i - start > 0 then Buffer.add_substring buf str start (i - start);
+      Buffer.contents buf)
+    else
+      match String.unsafe_get str i with
+      | '\027' ->
+         if i - start > 0 then Buffer.add_substring buf str start (i - start);
+         skip (i + 1)
+      | _ -> loop start (i + 1)
+  and skip i =
+    if i = len then Buffer.contents buf
+    else
+      match String.unsafe_get str i with
+      | 'm' -> loop (i + 1) (i + 1)
+      | _ -> skip (i + 1)
+  in
+  loop 0 0
