@@ -65,6 +65,26 @@ let sgr = function
   | 49 -> `BgCol `Default
   | _ -> raise Unknown_escape
 
+let rgb r g b = `Rgb (r lsl 16 lor g lsl 8 lor b)
+
+let colour256 n =
+  if 0 <= n && n <= 7 then
+    colour n
+  else if 8 <= n && n <= 15 then
+    `Hi (colour (n - 8))
+  else if 16 <= n && n <= 231 then
+    let cube y =
+      let i = ((n - 16) / y) mod 6 in
+      if i = 0 then 0 else (14135 + 10280 * i) / 256
+    in
+    let r = cube 36 and g = cube 6 and b = cube 1 in
+    rgb r g b
+  else if 232 <= n && n <= 255 then
+    let x = (n - 232) * 10 + 0x08 in
+    rgb x x x
+  else
+    raise Unknown_escape
+
 let sgrs params =
   match params with
   | "" :: _ -> [ `Reset ]
