@@ -1,7 +1,7 @@
 module Stream = Char_stream
 
-type colour =
-  [ `Default | `Black | `Blue | `Cyan | `Green | `Magenta | `Red | `White | `Yellow | `Rgb of int ]
+type base_colour = [ `Black | `Blue | `Cyan | `Green | `Magenta | `Red | `White | `Yellow ]
+type colour = [ base_colour | `Default | `Rgb of int | `Hi of base_colour ]
 
 type sgr =
   [ `BgCol of colour
@@ -58,9 +58,10 @@ let sgr = function
   | 24 -> `NoUnderline
   | 27 -> `NoReverse
   | x when x >= 30 && x <= 37 -> `FgCol (colour (x - 30))
-  | x when x >= 90 && x <= 97 -> `FgCol (colour (x - 90)) (* Non-standard "bright" fg colour *)
+  | x when x >= 90 && x <= 97 -> `FgCol (`Hi (colour (x - 90))) (* Non-standard "bright" fg colour *)
   | 39 -> `FgCol `Default
   | x when x >= 40 && x <= 47 -> `BgCol (colour (x - 40))
+  | x when x >= 100 && x <= 107 -> `BgCol (`Hi (colour (x - 100))) (* Non-standard "bright" bg colour *)
   | 49 -> `BgCol `Default
   | _ -> raise Unknown_escape
 
@@ -72,8 +73,11 @@ let sgrs params =
     | exception Failure _ ->
       raise Unknown_escape
     | params ->
-      let rgb r g b = `Rgb (r lsl 16 lor g lsl 8 lor b) in
       let rec go = function
+        | 38 :: 5 :: n :: rest ->
+          `FgCol (colour256 n) :: go rest
+        | 48 :: 5 :: n :: rest ->
+          `BgCol (colour256 n) :: go rest
         | 38 :: 2 :: r :: g :: b :: rest ->
           `FgCol (rgb r g b) :: go rest
         | 48 :: 2 :: r :: g :: b :: rest ->
