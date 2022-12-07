@@ -14,6 +14,7 @@ depends: [
   "astring"
   "fmt" {>= "0.8.7"}
   "tyxml"
+  "alcotest" {with-test}
   "odoc" {with-doc}
 ]
 build: [

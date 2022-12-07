@@ -17,4 +17,5 @@
   (ocaml (>= 4.10.0))
   astring
   (fmt (>= 0.8.7))
-  tyxml))
+  tyxml
+  (alcotest :with-test)))
