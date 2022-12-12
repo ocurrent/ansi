@@ -29,3 +29,5 @@ val parse :
     [`Invalid s2] indicates that the first token was malformed or not understood and processing should continue
     from [s2].
 *)
+
+val strip : string -> string
