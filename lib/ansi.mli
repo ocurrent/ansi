@@ -11,7 +11,8 @@ val process : t -> string -> string
     next call to [process]. *)
 
 val css : string
-(** Some default CSS rules to make the HTML output appear in colour. *)
+(** Some default CSS rules to make the HTML output appear in colour, using xterm defaults (light
+    variant). *)
 
 val css_solarized : string
 (** Some default CSS rules to make the HTML output appear in colour, with the Solarized colorscheme
