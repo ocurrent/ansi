@@ -24,7 +24,7 @@ let is_param_byte c =
 
 let is_im_byte c =
   let c = Char.code c in
-  c land 0xf0 = 0x40
+  c land 0xf0 = 0x20
 
 let is_final_byte c =
   let c = Char.code c in
