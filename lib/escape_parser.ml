@@ -30,6 +30,10 @@ let is_final_byte c =
   let c = Char.code c in
   c >= 0x40 && c <= 0x7e
 
+let is_escape_sequence_byte c =
+  let c = Char.code c in
+  c >= 0x20 && c <= 0x7e
+
 exception Unknown_escape
 
 let colour = function
@@ -128,3 +132,31 @@ let parse input =
   | None -> `Literal (Stream.skip_all input)
   | Some i when Stream.equal input i -> parse_escape input
   | Some i -> `Literal i
+
+let strip str =
+  let len = String.length str in
+  let buf = Buffer.create len in
+  let rec loop start i =
+    if i = len then (
+      if i - start > 0 then Buffer.add_substring buf str start (i - start);
+      Buffer.contents buf)
+    else
+      match String.unsafe_get str i with
+      | '\x1b' ->
+         if i - start > 0 then Buffer.add_substring buf str start (i - start);
+         skip_parse_escape (i + 1)
+      | _ -> loop start (i + 1)
+  and skip_parse_escape i =
+    if i = len then Buffer.contents buf
+    else
+      match String.unsafe_get str i with
+      | c when is_escape_sequence_byte c -> skip (i + 1)
+      | _ -> loop (i - 1) (i + 1)
+  and skip i =
+    if i = len then Buffer.contents buf
+    else
+      match String.unsafe_get str i with
+      | c when is_final_byte c -> loop (i + 1) (i + 1)
+      | _ -> skip (i + 1)
+  in
+  loop 0 0
