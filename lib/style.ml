@@ -54,7 +54,8 @@ let pp fmt (colors, bright_colors, dof) =
   pp_colors fmt `Bg false colors;
   pp_colors fmt `Bg true bright_colors;
   pp_dof fmt `Fg dof.fg;
-  pp_dof fmt `Bg dof.bg
+  pp_dof fmt `Bg dof.bg;
+  Fmt.pf fmt ".bold { font-weight: bold }\n"
 
 let default =
   {
