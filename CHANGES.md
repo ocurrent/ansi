@@ -1,7 +1,9 @@
 ### unreleased
 
+* Fix range of intermediate bytes. (#8, @MisterDA)
+
 * Add `Ansi.strip` to strip ANSI escape sequences part of a string.
-  (#7, @MisterDA)
+  (#7, #9, @MisterDA)
 
 ### 0.5.0
 
