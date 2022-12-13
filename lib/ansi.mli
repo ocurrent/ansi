@@ -13,6 +13,16 @@ val process : t -> string -> string
 val css : string
 (** Some default CSS rules to make the HTML output appear in colour. *)
 
+val css_solarized : string
+(** Some default CSS rules to make the HTML output appear in colour, with the Solarized colorscheme
+    (light variant).
+    @see https://ethanschoonover.com/solarized/ *)
+
+val css_solarized_dark : string
+(** Some default CSS rules to make the HTML output appear in colour, with the Solarized colorscheme
+    (dark variant).
+    @see https://ethanschoonover.com/solarized/ *)
+
 val strip : string -> string
 (** [strip data] reads in [data] and strips out ANSI sequences. It doesn't remember partial
     sequences between calls to [strip]. *)

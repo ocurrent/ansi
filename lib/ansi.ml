@@ -108,4 +108,8 @@ let process t data =
 
 let css = Style.css
 
+let css_solarized = Style.css_solarized
+
+let css_solarized_dark = Style.css_solarized_dark
+
 let strip = Escape_parser.strip

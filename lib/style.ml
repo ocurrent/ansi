@@ -88,3 +88,62 @@ let default_dof =
   }
 
 let css = Fmt.str "%a" pp (default, default_bright, default_dof)
+
+let solarized =
+  {
+    black = 7, 54, 66;
+    red = 220, 50, 47;
+    green = 133, 153, 0;
+    yellow = 181, 137, 0;
+    blue = 39, 139, 210;
+    magenta = 211, 54, 130;
+    cyan = 42, 161, 152;
+    white = 238, 232, 213;
+  }
+
+let solarized_bright =
+  {
+    black = 0, 43, 54;
+    red = 203, 75, 22;
+    green = 88, 110, 117;
+    yellow = 101, 123, 131;
+    blue = 131, 148, 150;
+    magenta = 108, 113, 196;
+    cyan = 147, 161, 161;
+    white = 253, 246, 227;
+  }
+
+let solarized_dof =
+  {
+    fg = solarized.black;
+    bg = solarized.white;
+  }
+
+let solarized_dark =
+  {
+    solarized with
+    black = solarized.white;
+    white = solarized.black;
+  }
+
+let solarized_dark_bright =
+  {
+    solarized_bright with
+    black = solarized_bright.white;
+    green = solarized_bright.cyan;
+    yellow = solarized_bright.blue;
+    blue = solarized_bright.yellow;
+    cyan = solarized_bright.green;
+    white = solarized_bright.black;
+  }
+
+let solarized_dark_dof =
+  {
+    fg = solarized.white;
+    bg = solarized.black;
+  }
+
+let css_solarized =
+  Fmt.str "%a" pp (solarized, solarized_bright, solarized_dof)
+let css_solarized_dark =
+  Fmt.str "%a" pp (solarized_dark, solarized_dark_bright, solarized_dark_dof)
