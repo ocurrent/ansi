@@ -12,6 +12,13 @@ type t =
     white : rgb;
   }
 
+(* Depth of Field colors *)
+type dof =
+  {
+    fg : rgb;
+    bg : rgb;
+  }
+
 let pp_rgb fmt (r, g, b) =
   Fmt.pf fmt "rgb(%d, %d, %d)" r g b
 
@@ -34,11 +41,20 @@ let pp_colors fmt dof bright t =
   pp_escape fmt dof bright "cyan" t.cyan;
   pp_escape fmt dof bright "white" t.white
 
-let pp fmt (colors, bright_colors) =
+let pp_dof fmt dof rgb =
+  Fmt.pf fmt ".%s-default { %s: %a }\n"
+    (match dof with `Fg -> "fg" | `Bg -> "bg")
+    (match dof with `Fg -> "color" | `Bg -> "background")
+    pp_rgb
+    rgb
+
+let pp fmt (colors, bright_colors, dof) =
   pp_colors fmt `Fg false colors;
   pp_colors fmt `Fg true bright_colors;
   pp_colors fmt `Bg false colors;
-  pp_colors fmt `Bg true bright_colors
+  pp_colors fmt `Bg true bright_colors;
+  pp_dof fmt `Fg dof.fg;
+  pp_dof fmt `Bg dof.bg
 
 let default =
   {
@@ -64,4 +80,10 @@ let default_bright =
     white = 255, 255, 255;
   }
 
-let css = Fmt.str "%a" pp (default, default_bright)
+let default_dof =
+  {
+    fg = default.black;
+    bg = default_bright.white;
+  }
+
+let css = Fmt.str "%a" pp (default, default_bright, default_dof)
