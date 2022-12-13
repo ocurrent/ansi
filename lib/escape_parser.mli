@@ -1,5 +1,5 @@
-type colour =
-  [ `Default | `Black | `Blue | `Cyan | `Green | `Magenta | `Red | `White | `Yellow | `Rgb of int ]
+type base_colour = [ `Black | `Blue | `Cyan | `Green | `Magenta | `Red | `White | `Yellow ]
+type colour = [ base_colour | `Default | `Rgb of int | `Hi of base_colour ]
 
 type sgr =
   [ `BgCol of colour

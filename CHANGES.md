@@ -5,6 +5,16 @@
 * Add `Ansi.strip` to strip ANSI escape sequences part of a string.
   (#7, #9, @MisterDA)
 
+* Support 8-bit colour palette, bright colours. (#6, @MisterDA)
+
+* Expose default foreground and background colors with `.fg-default`
+  and `.bg-default` CSS classes. (#6, MisterDA)
+
+* Fix bold/bright confusion, expose `.bold` CSS class. (#6, @MisterDA)
+
+* Expose alternative 16-colours colorschemes (xterm dark, solarized
+  light and dark). (#6, @MisterDA)
+
 ### 0.5.0
 
 * Rename to `ansi` (#2, @samoht)

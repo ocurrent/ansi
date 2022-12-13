@@ -18,16 +18,22 @@ type t = {
 
 let default_gfx_state = { bold = false; fg = `Default; bg = `Default; reversed = false }
 
-let name_of_colour = function
+let name_of_colour : Escape_parser.base_colour -> string = function
+  | `Black -> "black"
+  | `Blue -> "blue"
+  | `Cyan -> "cyan"
+  | `Green -> "green"
+  | `Magenta -> "magenta"
+  | `Red -> "red"
+  | `White -> "white"
+  | `Yellow -> "yellow"
+
+let name_of_colour : Escape_parser.colour -> string option = function
   | `Default | `Rgb _ -> None
-  | `Black -> Some "black"
-  | `Blue -> Some "blue"
-  | `Cyan -> Some "cyan"
-  | `Green -> Some "green"
-  | `Magenta -> Some "magenta"
-  | `Red -> Some "red"
-  | `White -> Some "white"
-  | `Yellow -> Some "yellow"
+  | `Hi colour -> Some (name_of_colour colour)
+  | (#Escape_parser.base_colour as colour) -> Some (name_of_colour colour)
+
+let is_bright : Escape_parser.colour -> bool = function `Hi _ -> true | _ -> false
 
 let apply_ctrl state = function
   | `Bold -> { state with bold = true }
@@ -51,15 +57,15 @@ let with_style s txt =
   | { bold = false; fg = `Default; bg = `Default; _ } -> txt
   | { bold; fg; bg; reversed } ->
       let bg, fg = if reversed then fg, bg else bg, fg in
-      let cl ty = function
-        | None when bold && ty = "fg" -> [ "fg-bright-white" ]
+      let cl ty bright = function
+        | None when ty = "fg" -> [ "fg-default" ]
         | Some c when bold && ty = "fg" -> [ Printf.sprintf "fg-bright-%s" c ]
-        | Some c -> [ Printf.sprintf "%s-%s" ty c ]
+        | Some c -> [ Printf.sprintf "%s-%s%s" ty (if bright then "bright-" else "") c ]
         | None -> []
       in
       let cls = if bold then [ "bold" ] else [] in
-      let cls = cl "fg" (name_of_colour fg) @ cls in
-      let cls = cl "bg" (name_of_colour bg) @ cls in
+      let cls = cl "fg" (is_bright fg) (name_of_colour fg) @ cls in
+      let cls = cl "bg" (is_bright fg) (name_of_colour bg) @ cls in
       let style = function
         | (`Rgb x, `Fg) -> [ Printf.sprintf "color: #%06x" x ]
         | (`Rgb x, `Bg) -> [ Printf.sprintf "background-color: #%06x" x ]
@@ -101,5 +107,11 @@ let process t data =
   Buffer.contents output
 
 let css = Style.css
+
+let css_dark = Style.css_dark
+
+let css_solarized = Style.css_solarized
+
+let css_solarized_dark = Style.css_solarized_dark
 
 let strip = Escape_parser.strip
