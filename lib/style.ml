@@ -89,6 +89,28 @@ let default_dof =
 
 let css = Fmt.str "%a" pp (default, default_bright, default_dof)
 
+let default_dark =
+  {
+    default with
+    black = default.white;
+    white = default.black;
+  }
+
+let default_dark_bright =
+  {
+    default_bright with
+    black = default_bright.white;
+    white = default_bright.black;
+  }
+
+let default_dark_dof =
+  {
+    fg = default_dof.bg;
+    bg = default_dof.fg;
+  }
+
+let css_dark = Fmt.str "%a" pp (default_dark, default_dark_bright, default_dark_dof)
+
 let solarized =
   {
     black = 7, 54, 66;

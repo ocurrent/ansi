@@ -14,6 +14,10 @@ val css : string
 (** Some default CSS rules to make the HTML output appear in colour, using xterm defaults (light
     variant). *)
 
+val css_dark : string
+(** Some default CSS rules to make the HTML output appear in colour, using xterm defaults (dark
+    variant). *)
+
 val css_solarized : string
 (** Some default CSS rules to make the HTML output appear in colour, with the Solarized colorscheme
     (light variant).

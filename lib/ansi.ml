@@ -108,6 +108,8 @@ let process t data =
 
 let css = Style.css
 
+let css_dark = Style.css_dark
+
 let css_solarized = Style.css_solarized
 
 let css_solarized_dark = Style.css_solarized_dark
