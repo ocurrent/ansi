@@ -6,7 +6,8 @@
 * Fix range of intermediate bytes. (#8, @MisterDA)
 
 * Add `Ansi.strip` to strip ANSI escape sequences part of a string.
-  (#7, #9, @MisterDA)
+  Support stripping OSC sequences.
+  (#7, #9, #12, @MisterDA)
 
 * Support 8-bit colour palette, bright colours. (#6, @MisterDA)
 
