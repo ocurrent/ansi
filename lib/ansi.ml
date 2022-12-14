@@ -58,14 +58,12 @@ let with_style s txt =
   | { bold; fg; bg; reversed } ->
       let bg, fg = if reversed then fg, bg else bg, fg in
       let cl ty bright = function
-        | None when ty = "fg" -> [ "fg-default" ]
-        | Some c when bold && ty = "fg" -> [ Printf.sprintf "fg-bright-%s" c ]
         | Some c -> [ Printf.sprintf "%s-%s%s" ty (if bright then "bright-" else "") c ]
         | None -> []
       in
       let cls = if bold then [ "bold" ] else [] in
       let cls = cl "fg" (is_bright fg) (name_of_colour fg) @ cls in
-      let cls = cl "bg" (is_bright fg) (name_of_colour bg) @ cls in
+      let cls = cl "bg" (is_bright bg) (name_of_colour bg) @ cls in
       let style = function
         | (`Rgb x, `Fg) -> [ Printf.sprintf "color: #%06x" x ]
         | (`Rgb x, `Bg) -> [ Printf.sprintf "background-color: #%06x" x ]
