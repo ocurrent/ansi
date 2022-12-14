@@ -6,6 +6,8 @@ let max_escape_length = 20
 
 type gfx_state = {
   bold : bool;
+  italic : bool;
+  underline : bool;
   fg : Escape_parser.colour;
   bg : Escape_parser.colour;
   reversed : bool;
@@ -16,7 +18,11 @@ type t = {
   mutable buf : string;
 }
 
-let default_gfx_state = { bold = false; fg = `Default; bg = `Default; reversed = false }
+let default_gfx_state = {
+  bold = false; italic = false; underline = false;
+  fg = `Default; bg = `Default;
+  reversed = false
+}
 
 let name_of_colour : Escape_parser.base_colour -> string = function
   | `Black -> "black"
@@ -42,8 +48,10 @@ let apply_ctrl state = function
   | `BgCol bg -> { state with bg }
   | `Reverse -> { state with reversed = true }
   | `NoReverse -> { state with reversed = false }
-  | `Italic | `NoItalic | `NoUnderline | `Underline ->
-      state
+  | `Italic -> { state with italic = true }
+  | `NoItalic -> { state with italic = false }
+  | `Underline -> { state with underline = true }
+  | `NoUnderline -> { state with underline = false }
   | `Reset -> default_gfx_state
 
 let pp_attr attr ~sep f = function
@@ -54,14 +62,16 @@ let pp_style = pp_attr "style" ~sep:Fmt.(const string "; ")
 
 let with_style s txt =
   match s with
-  | { bold = false; fg = `Default; bg = `Default; _ } -> txt
-  | { bold; fg; bg; reversed } ->
+  | { bold = false; italic = false; underline = false; fg = `Default; bg = `Default; _ } -> txt
+  | { bold; italic; underline; fg; bg; reversed } ->
       let bg, fg = if reversed then fg, bg else bg, fg in
       let cl ty bright = function
         | Some c -> [ Printf.sprintf "%s-%s%s" ty (if bright then "bright-" else "") c ]
         | None -> []
       in
       let cls = if bold then [ "bold" ] else [] in
+      let cls = if italic then "italic" :: cls else cls in
+      let cls = if underline then "underline" :: cls else cls in
       let cls = cl "fg" (is_bright fg) (name_of_colour fg) @ cls in
       let cls = cl "bg" (is_bright bg) (name_of_colour bg) @ cls in
       let style = function

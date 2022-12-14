@@ -1,5 +1,8 @@
 ### unreleased
 
+* Support italic and underline escape sequences with `.italic` and
+  `.underline` CSS classes. (#11, @MisterDA)
+
 * Fix range of intermediate bytes. (#8, @MisterDA)
 
 * Add `Ansi.strip` to strip ANSI escape sequences part of a string.
