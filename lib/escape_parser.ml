@@ -174,6 +174,7 @@ let strip str =
     if i = len then Buffer.contents buf
     else
       match String.unsafe_get str i with
+      | ']' -> skip_osc i
       | c when is_escape_sequence_byte c -> skip (i + 1)
       | _ -> loop (i - 1) (i + 1)
   and skip i =
@@ -182,5 +183,17 @@ let strip str =
       match String.unsafe_get str i with
       | c when is_final_byte c -> loop (i + 1) (i + 1)
       | _ -> skip (i + 1)
+  and skip_osc i =
+    if i = len then Buffer.contents buf
+    else
+      match String.unsafe_get str i with
+      | '\x1b' ->
+         let i = i + 1 in
+         if i = len then Buffer.contents buf
+         else
+           (match String.unsafe_get str i with
+            | '\\' -> loop (i + 1) (i + 1)
+            | _ -> skip_osc (i + 1))
+      | _ -> skip_osc (i + 1)
   in
   loop 0 0

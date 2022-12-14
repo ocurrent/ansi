@@ -11,7 +11,14 @@ let test_strip () =
 the lazy fox jumps over the brown dog
 the lazy fox jumps over the brown dog|}
   in
-  Alcotest.(check string) "strip escape sequences" expected actual
+  Alcotest.(check string) "strip escape sequences" expected actual;
+  let actual =
+    "\x1b]8;;http://example.com\x1b\\This is a link\x1b]8;;\x1b\\"
+    |> Ansi.strip
+  and expected = "This is a link"
+  in
+  Alcotest.(check string) "strip hyperlink (OSC)" expected actual;
+  ()
 
 let test_decorations () =
   let parser = Ansi.create () in
