@@ -55,7 +55,11 @@ let pp fmt (colors, bright_colors, dof) =
   pp_colors fmt `Bg true bright_colors;
   pp_dof fmt `Fg dof.fg;
   pp_dof fmt `Bg dof.bg;
-  Fmt.pf fmt "pre span.bold { font-weight: bold }\n"
+  Fmt.pf fmt
+{|pre span.bold { font-weight: bold }
+pre span.italic { font-weight: italic }
+pre span.underline { text-decoration: underline }
+|}
 
 let default =
   {
