@@ -63,7 +63,7 @@ let with_style s txt =
       in
       let cls = if bold then [ "bold" ] else [] in
       let cls = cl "fg" (is_bright fg) (name_of_colour fg) @ cls in
-      let cls = cl "bg" (is_bright fg) (name_of_colour bg) @ cls in
+      let cls = cl "bg" (is_bright bg) (name_of_colour bg) @ cls in
       let style = function
         | (`Rgb x, `Fg) -> [ Printf.sprintf "color: #%06x" x ]
         | (`Rgb x, `Bg) -> [ Printf.sprintf "background-color: #%06x" x ]
