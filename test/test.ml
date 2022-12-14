@@ -2,9 +2,9 @@ let test_strip () =
   let actual =
     (String.concat "\n"
        (List.map Ansi.strip [
-            "\027[34mthe lazy fox\027[39m jumps over the brown dog\027[0m";
-            "the lazy fox \027[34mjumps over\027[39m the brown dog\027[0m";
-            "\027[34mthe lazy fox\027[m\027[39m jumps over \027[mthe brown dog"
+            "\x1b[34mthe lazy fox\x1b[39m jumps over the brown dog\x1b[0m";
+            "the lazy fox \x1b[34mjumps over\x1b[39m the brown dog\x1b[0m";
+            "\x1b[34mthe lazy fox\x1b[m\x1b[39m jumps over \x1b[mthe brown dog"
     ]));
   and expected =
     {|the lazy fox jumps over the brown dog
