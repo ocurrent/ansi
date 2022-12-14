@@ -10,6 +10,9 @@ val process : t -> string -> string
     If [data] ends with a partial sequence, it remembers this and will resume processing on the
     next call to [process]. *)
 
+(** The [.fg-default] and [.bg-default] CSS classes should be applied
+    to the parent element of the processed strings. *)
+
 val css : string
 (** Some default CSS rules to make the HTML output appear in colour, using xterm defaults (light
     variant). *)

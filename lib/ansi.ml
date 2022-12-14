@@ -58,7 +58,6 @@ let with_style s txt =
   | { bold; fg; bg; reversed } ->
       let bg, fg = if reversed then fg, bg else bg, fg in
       let cl ty bright = function
-        | None when ty = "fg" -> [ "fg-default" ]
         | Some c when bold && ty = "fg" -> [ Printf.sprintf "fg-bright-%s" c ]
         | Some c -> [ Printf.sprintf "%s-%s%s" ty (if bright then "bright-" else "") c ]
         | None -> []
