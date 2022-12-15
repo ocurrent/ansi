@@ -21,7 +21,7 @@ type t = {
 let default_gfx_state = {
   bold = false; italic = false; underline = false;
   fg = `Default; bg = `Default;
-  reversed = false
+  reversed = false;
 }
 
 let name_of_colour : Escape_parser.base_colour -> string = function
@@ -41,7 +41,7 @@ let name_of_colour : Escape_parser.colour -> string option = function
 
 let is_bright : Escape_parser.colour -> bool = function `Hi _ -> true | _ -> false
 
-let apply_ctrl state = function
+let apply_ctrl state : Escape_parser.sgr -> gfx_state = function
   | `Bold -> { state with bold = true }
   | `NoBold -> { state with bold = false }
   | `FgCol fg -> { state with fg }
@@ -62,7 +62,7 @@ let pp_style = pp_attr "style" ~sep:Fmt.(const string "; ")
 
 let with_style s txt =
   match s with
-  | { bold = false; italic = false; underline = false; fg = `Default; bg = `Default; _ } -> txt
+  | s when s = default_gfx_state -> txt
   | { bold; italic; underline; fg; bg; reversed } ->
       let bg, fg = if reversed then fg, bg else bg, fg in
       let cl ty bright = function
