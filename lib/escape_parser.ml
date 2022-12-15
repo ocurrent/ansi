@@ -16,7 +16,12 @@ type sgr =
   | `Reverse
   | `Underline ]
 
-type escape = [ `Reset | `Ctrl of [ `SelectGraphicRendition of sgr list ] ]
+type escape =
+  [ `Reset
+  | `ST
+  | `Ctrl of [ `SelectGraphicRendition of sgr list ]
+  | `OSC of [ `Hyperlink of ((string * string) list * string) option ]
+  ]
 
 let is_param_byte c =
   let c = Char.code c in
@@ -138,13 +143,49 @@ let read_params start =
   in
   aux start
 
+let is_param_osc c =
+  let c = Char.code c in
+  (c >= 0x08 && c <= 0x0d) || (c >= 0x20 && c <= 0x7e)
+
+let read_intermediates_osc ~params s =
+  match params with
+  | ["8"; ""; ""] -> `Escape (`OSC (`Hyperlink None), s)
+  | ["8"; ""; link] -> `Escape (`OSC (`Hyperlink (Some ([], link))), s)
+  | ["8"; params; link] -> (
+    try
+      let params =
+        (* not the prettiest *)
+        Astring.String.cuts ~sep:":" params
+        |> List.map (fun param ->
+               match Astring.String.cut ~sep:"=" param with
+               | Some param -> param
+               | None -> raise Unknown_escape)
+      in
+      `Escape (`OSC (`Hyperlink (Some (params, link))), s)
+    with Unknown_escape -> `Invalid s)
+  | _ -> `Invalid s
+
+let read_params_osc start =
+  let rec aux s =
+    match Stream.next s with
+    | None -> `Incomplete (* No final byte *)
+    | Some (x, s) when is_param_osc x ->
+       aux s
+    | Some _ ->
+       let params =
+         Stream.(start -- s |> string_of_span)
+         |> Astring.String.cuts ~sep:";" in
+       read_intermediates_osc ~params s
+  in
+  aux start
+
 (* Parse [esc], an escape sequence. *)
 let parse_escape esc =
   match Stream.(next (Stream.skip esc)) with
   | Some ('[', s) -> read_params s (* [esc] is a control sequence *)
-  | Some (']', s) ->
-      `Invalid s (* [esc] is a operating system command sequence (todo) *)
+  | Some (']', s) -> read_params_osc s (* [esc] is a operating system command sequence *)
   | Some ('c', s) -> `Escape (`Reset, s)
+  | Some ('\\', s) -> `Escape (`ST, s)
   | Some (_, s) -> `Invalid s (* TODO: other types of escape *)
   | None -> `Incomplete
 

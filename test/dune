@@ -20,6 +20,10 @@
  (modules ansi)
  (libraries ansi))
 
+(executable
+ (name link)
+ (modules link))
+
 (rule
  (target color_4bit.actual)
  (action
@@ -61,3 +65,17 @@
  (alias runtest)
  (action
   (diff color_24bit.html color_24bit.actual)))
+
+(rule
+ (target link.actual)
+ (action
+  (with-stdout-to
+   link.actual
+   (pipe-stdout
+    (run %{dep:link.exe})
+    (run %{dep:ansi.exe} link)))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff link.html link.actual)))

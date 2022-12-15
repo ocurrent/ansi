@@ -14,7 +14,12 @@ type sgr =
   | `Reverse
   | `Underline ]
 
-type escape = [ `Reset | `Ctrl of [ `SelectGraphicRendition of sgr list ] ]
+type escape =
+  [ `Reset
+  | `ST
+  | `Ctrl of [ `SelectGraphicRendition of sgr list ]
+  | `OSC of [ `Hyperlink of ((string * string) list * string) option ]
+  ]
 
 val parse :
   Char_stream.t ->
