@@ -11,6 +11,7 @@ type gfx_state = {
   fg : Escape_parser.colour;
   bg : Escape_parser.colour;
   reversed : bool;
+  links : string list;
 }
 
 type t = {
@@ -22,6 +23,7 @@ let default_gfx_state = {
   bold = false; italic = false; underline = false;
   fg = `Default; bg = `Default;
   reversed = false;
+  links = [];
 }
 
 let name_of_colour : Escape_parser.base_colour -> string = function
@@ -54,6 +56,10 @@ let apply_ctrl state : Escape_parser.sgr -> gfx_state = function
   | `NoUnderline -> { state with underline = false }
   | `Reset -> default_gfx_state
 
+let apply_osc state = function
+  | Some (_params, link) -> { state with links = link :: state.links}
+  | None -> (match state.links with _ :: links -> { state with links } | [] -> state)
+
 let pp_attr attr ~sep f = function
   | [] -> ()
   | cls -> Fmt.(pf f " %s='%a'" attr (list ~sep string) cls)
@@ -63,7 +69,7 @@ let pp_style = pp_attr "style" ~sep:Fmt.(const string "; ")
 let with_style s txt =
   match s with
   | s when s = default_gfx_state -> txt
-  | { bold; italic; underline; fg; bg; reversed } ->
+  | { bold; italic; underline; fg; bg; reversed; links } ->
       let bg, fg = if reversed then fg, bg else bg, fg in
       let cl ty bright = function
         | Some c -> [ Printf.sprintf "%s-%s%s" ty (if bright then "bright-" else "") c ]
@@ -80,7 +86,11 @@ let with_style s txt =
         | _ -> []
       in
       let style = style (fg, `Fg) @ style (bg, `Bg) in
-      Fmt.str "<span%a%a>%s</span>" pp_class cls pp_style style txt
+      match links with
+      | [] -> Fmt.str "<span%a%a>%s</span>" pp_class cls pp_style style txt
+      | link :: _ ->
+         Fmt.str "<span%a%a><a href='%s'>%s</a></span>" pp_class cls pp_style style link txt
+      (* | _ -> failwith "unimplemented" *)
 
 let create () = { gfx_state = default_gfx_state; buf = "" }
 
@@ -109,6 +119,11 @@ let process t data =
     | `Escape (`Ctrl (`SelectGraphicRendition c), i) ->
         t.gfx_state <- List.fold_left apply_ctrl t.gfx_state c;
         aux i
+    | `Escape (`OSC (`Hyperlink l), i) ->
+       t.gfx_state <- apply_osc t.gfx_state l;
+       aux i
+    | `Escape (`ST, i) ->
+       aux i
   in
   let (`Done unprocessed) = aux (Stream.of_string (t.buf ^ data)) in
   t.buf <- unprocessed;

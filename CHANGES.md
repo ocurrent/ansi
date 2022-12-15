@@ -1,5 +1,8 @@
 ### unreleased
 
+* Support OSC hyperlinks. (#13, @MisterDA)
+  https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
+
 * Support italic and underline escape sequences with `.italic` and
   `.underline` CSS classes. (#11, @MisterDA)
 
