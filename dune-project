@@ -6,8 +6,12 @@
 (subst disabled)
 
 (source (github ocurrent/ansi))
-(maintainers "talex5@gmail.com")
-(authors "talex5@gmail.com")
+(maintainers
+ "Antonin Décimo <antonin@tarides.com>"
+ "<talex5@gmail.com>")
+(authors
+ "Antonin Décimo <antonin@tarides.com>"
+ "talex5@gmail.com")
 (license Apache-2.0)
 (package
  (name ansi)
