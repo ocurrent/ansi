@@ -3,7 +3,6 @@
 (implicit_transitive_deps false)
 (formatting (enabled_for dune))
 (generate_opam_files true)
-(subst disabled)
 
 (source (github ocurrent/ansi))
 (maintainers
