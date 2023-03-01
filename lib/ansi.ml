@@ -6,8 +6,10 @@ let max_escape_length = 20
 
 type gfx_state = {
   bold : bool;
+  faint : bool;
   italic : bool;
   underline : bool;
+  double_underline : bool;
   fg : Escape_parser.colour;
   bg : Escape_parser.colour;
   reversed : bool;
@@ -20,7 +22,8 @@ type t = {
 }
 
 let default_gfx_state = {
-  bold = false; italic = false; underline = false;
+  bold = false; faint = false; italic = false;
+  underline = false; double_underline = false;
   fg = `Default; bg = `Default;
   reversed = false;
   links = [];
@@ -45,7 +48,8 @@ let is_bright : Escape_parser.colour -> bool = function `Hi _ -> true | _ -> fal
 
 let apply_ctrl state : Escape_parser.sgr -> gfx_state = function
   | `Bold -> { state with bold = true }
-  | `NoBold -> { state with bold = false }
+  | `Faint -> { state with faint = true }
+  | `NormalIntensity -> { state with bold = false; faint = false }
   | `FgCol fg -> { state with fg }
   | `BgCol bg -> { state with bg }
   | `Reverse -> { state with reversed = true }
@@ -53,7 +57,8 @@ let apply_ctrl state : Escape_parser.sgr -> gfx_state = function
   | `Italic -> { state with italic = true }
   | `NoItalic -> { state with italic = false }
   | `Underline -> { state with underline = true }
-  | `NoUnderline -> { state with underline = false }
+  | `DoubleUnderline -> { state with double_underline = true }
+  | `NoUnderline -> { state with underline = false; double_underline = false }
   | `Reset -> default_gfx_state
 
 let apply_osc state = function
@@ -69,15 +74,17 @@ let pp_style = pp_attr "style" ~sep:Fmt.(const string "; ")
 let with_style s txt =
   match s with
   | s when s = default_gfx_state -> txt
-  | { bold; italic; underline; fg; bg; reversed; links } ->
+  | { bold; faint; italic; underline; double_underline; fg; bg; reversed; links } ->
       let bg, fg = if reversed then fg, bg else bg, fg in
       let cl ty bright = function
         | Some c -> [ Printf.sprintf "%s-%s%s" ty (if bright then "bright-" else "") c ]
         | None -> []
       in
       let cls = if bold then [ "bold" ] else [] in
+      let cls = if faint then "faint" :: cls else cls in
       let cls = if italic then "italic" :: cls else cls in
       let cls = if underline then "underline" :: cls else cls in
+      let cls = if double_underline then "double-underline" :: cls else cls in
       let cls = cl "fg" (is_bright fg) (name_of_colour fg) @ cls in
       let cls = cl "bg" (is_bright bg) (name_of_colour bg) @ cls in
       let style = function

@@ -19,46 +19,53 @@ type dof =
     bg : rgb;
   }
 
-let pp_rgb fmt (r, g, b) =
+let faint_c c = int_of_float (float_of_int c *. 2. /. 3.)
+
+let pp_rgb fmt ~faint (r, g, b) =
+  let r, g, b = if faint then faint_c r, faint_c g, faint_c b else r, g, b in
   Fmt.pf fmt "rgb(%d, %d, %d)" r g b
 
-let pp_escape fmt dof bright name rgb =
-  Fmt.pf fmt "pre span.%s-%s%s { %s: %a }\n"
+let pp_escape fmt dof ~bright ~faint name rgb =
+  Fmt.pf fmt "pre span.%s-%s%s%s { %s: %a }\n"
     (match dof with `Fg -> "fg" | `Bg -> "bg")
     (if bright then "bright-" else "")
     name
+    (if faint then ".faint" else "")
     (match dof with `Fg -> "color" | `Bg -> "background")
-    pp_rgb
+    (pp_rgb ~faint)
     rgb
 
-let pp_colors fmt dof bright t =
-  pp_escape fmt dof bright "black" t.black;
-  pp_escape fmt dof bright "red" t.red;
-  pp_escape fmt dof bright "green" t.green;
-  pp_escape fmt dof bright "yellow" t.yellow;
-  pp_escape fmt dof bright "blue" t.blue;
-  pp_escape fmt dof bright "magenta" t.magenta;
-  pp_escape fmt dof bright "cyan" t.cyan;
-  pp_escape fmt dof bright "white" t.white
+let pp_colors fmt dof ~bright ~faint t =
+  pp_escape fmt dof ~bright ~faint "black" t.black;
+  pp_escape fmt dof ~bright ~faint "red" t.red;
+  pp_escape fmt dof ~bright ~faint "green" t.green;
+  pp_escape fmt dof ~bright ~faint "yellow" t.yellow;
+  pp_escape fmt dof ~bright ~faint "blue" t.blue;
+  pp_escape fmt dof ~bright ~faint "magenta" t.magenta;
+  pp_escape fmt dof ~bright ~faint "cyan" t.cyan;
+  pp_escape fmt dof ~bright ~faint "white" t.white
 
 let pp_dof fmt dof rgb =
   Fmt.pf fmt ".%s-default { %s: %a }\n"
     (match dof with `Fg -> "fg" | `Bg -> "bg")
     (match dof with `Fg -> "color" | `Bg -> "background")
-    pp_rgb
+    (pp_rgb ~faint:false)
     rgb
 
 let pp fmt (colors, bright_colors, dof) =
-  pp_colors fmt `Fg false colors;
-  pp_colors fmt `Fg true bright_colors;
-  pp_colors fmt `Bg false colors;
-  pp_colors fmt `Bg true bright_colors;
+  pp_colors fmt `Fg ~bright:false ~faint:false colors;
+  pp_colors fmt `Fg ~bright:false ~faint:true colors;
+  pp_colors fmt `Fg ~bright:true ~faint:false bright_colors;
+  pp_colors fmt `Fg ~bright:true ~faint:true bright_colors;
+  pp_colors fmt `Bg ~bright:false ~faint:false colors;
+  pp_colors fmt `Bg ~bright:true ~faint:false bright_colors;
   pp_dof fmt `Fg dof.fg;
   pp_dof fmt `Bg dof.bg;
   Fmt.pf fmt
 {|pre span.bold { font-weight: bold }
 pre span.italic { font-weight: italic }
 pre span.underline { text-decoration: underline }
+pre span.double-underline { text-decoration: underline double; }
 |}
 
 let default =

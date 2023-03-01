@@ -1,3 +1,7 @@
+### unreleased
+
+* Support faint and double underline styles. (#14, @MisterDA)
+
 ### 0.6.0
 
 * Support OSC hyperlinks. (#13, @MisterDA)

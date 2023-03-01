@@ -4,15 +4,17 @@ type colour = [ base_colour | `Default | `Rgb of int | `Hi of base_colour ]
 type sgr =
   [ `BgCol of colour
   | `Bold
+  | `Faint
   | `FgCol of colour
   | `Italic
-  | `NoBold
+  | `NormalIntensity
   | `NoItalic
   | `NoReverse
   | `NoUnderline
   | `Reset
   | `Reverse
-  | `Underline ]
+  | `Underline
+  | `DoubleUnderline ]
 
 type escape =
   [ `Reset

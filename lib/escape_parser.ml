@@ -6,15 +6,17 @@ type colour = [ base_colour | `Default | `Rgb of int | `Hi of base_colour ]
 type sgr =
   [ `BgCol of colour
   | `Bold
+  | `Faint
   | `FgCol of colour
   | `Italic
-  | `NoBold
+  | `NormalIntensity
   | `NoItalic
   | `NoReverse
   | `NoUnderline
   | `Reset
   | `Reverse
-  | `Underline ]
+  | `Underline
+  | `DoubleUnderline ]
 
 type escape =
   [ `Reset
@@ -55,10 +57,12 @@ let colour = function
 let sgr = function
   | 0 -> `Reset
   | 1 -> `Bold
+  | 2 -> `Faint
   | 3 -> `Italic
   | 4 -> `Underline
   | 7 -> `Reverse
-  | 22 -> `NoBold
+  | 21 -> `DoubleUnderline
+  | 22 -> `NormalIntensity
   | 23 -> `NoItalic
   | 24 -> `NoUnderline
   | 27 -> `NoReverse
