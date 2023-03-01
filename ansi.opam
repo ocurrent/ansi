@@ -7,6 +7,7 @@ maintainer: ["Antonin Décimo <antonin@tarides.com>" "<talex5@gmail.com>"]
 authors: ["Antonin Décimo <antonin@tarides.com>" "talex5@gmail.com"]
 license: "Apache-2.0"
 homepage: "https://github.com/ocurrent/ansi"
+doc: "https://ocurrent.github.io/ansi/"
 bug-reports: "https://github.com/ocurrent/ansi/issues"
 depends: [
   "dune" {>= "3.6"}

@@ -5,6 +5,7 @@
 (generate_opam_files true)
 
 (source (github ocurrent/ansi))
+(documentation "https://ocurrent.github.io/ansi/") 
 (maintainers
  "Antonin Décimo <antonin@tarides.com>"
  "<talex5@gmail.com>")
