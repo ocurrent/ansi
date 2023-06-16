@@ -1,6 +1,7 @@
 ### unreleased
 
 * Support faint and double underline styles. (#14, @MisterDA)
+* Adopt the OCaml Code of Conduct (#15, @rikusilvola)
 
 ### 0.6.0
 
