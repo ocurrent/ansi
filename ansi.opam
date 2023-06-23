@@ -3,7 +3,11 @@ opam-version: "2.0"
 synopsis: "ANSI escape sequence parser"
 description:
   "This package provides a basic ANSI escape parser, allowing the OCurrent web UI to show logs in colour."
-maintainer: ["Antonin Décimo <antonin@tarides.com>" "<talex5@gmail.com>"]
+maintainer: [
+  "Antonin Décimo <antonin@tarides.com>"
+  "Navin Keswani <navin@novemberkilo.io>"
+  "<talex5@gmail.com>"
+]
 authors: ["Antonin Décimo <antonin@tarides.com>" "talex5@gmail.com"]
 license: "Apache-2.0"
 homepage: "https://github.com/ocurrent/ansi"

@@ -5,10 +5,11 @@
 (generate_opam_files true)
 
 (source (github ocurrent/ansi))
-(documentation "https://ocurrent.github.io/ansi/") 
+(documentation "https://ocurrent.github.io/ansi/")
 (maintainers
- "Antonin Décimo <antonin@tarides.com>"
- "<talex5@gmail.com>")
+  "Antonin Décimo <antonin@tarides.com>"
+  "Navin Keswani <navin@novemberkilo.io>"
+  "<talex5@gmail.com>")
 (authors
  "Antonin Décimo <antonin@tarides.com>"
  "talex5@gmail.com")
