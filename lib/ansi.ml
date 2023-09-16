@@ -39,10 +39,12 @@ let name_of_colour : Escape_parser.base_colour -> string = function
   | `White -> "white"
   | `Yellow -> "yellow"
 
-let name_of_colour : Escape_parser.colour -> string option = function
-  | `Default | `Rgb _ -> None
-  | `Hi colour -> Some (name_of_colour colour)
-  | (#Escape_parser.base_colour as colour) -> Some (name_of_colour colour)
+let name_of_colour ~reversed (c : Escape_parser.colour) : string option =
+  match reversed, c with
+  | true, `Default -> Some "reversed-default"
+  | _, (`Default | `Rgb _) -> None
+  | _, `Hi colour -> Some (name_of_colour colour)
+  | _, (#Escape_parser.base_colour as colour) -> Some (name_of_colour colour)
 
 let is_bright : Escape_parser.colour -> bool = function `Hi _ -> true | _ -> false
 
@@ -85,8 +87,8 @@ let with_style s txt =
       let cls = if italic then "italic" :: cls else cls in
       let cls = if underline then "underline" :: cls else cls in
       let cls = if double_underline then "double-underline" :: cls else cls in
-      let cls = cl "fg" (is_bright fg) (name_of_colour fg) @ cls in
-      let cls = cl "bg" (is_bright bg) (name_of_colour bg) @ cls in
+      let cls = cl "fg" (is_bright fg) (name_of_colour ~reversed fg) @ cls in
+      let cls = cl "bg" (is_bright bg) (name_of_colour ~reversed bg) @ cls in
       let style = function
         | (`Rgb x, `Fg) -> [ Printf.sprintf "color: #%06x" x ]
         | (`Rgb x, `Bg) -> [ Printf.sprintf "background-color: #%06x" x ]
