@@ -63,7 +63,7 @@ let pp fmt (colors, bright_colors, dof) =
   pp_dof fmt `Bg dof.bg;
   Fmt.pf fmt
 {|pre span.bold { font-weight: bold }
-pre span.italic { font-weight: italic }
+pre span.italic { font-style: italic }
 pre span.underline { text-decoration: underline }
 pre span.double-underline { text-decoration: underline double; }
 |}
