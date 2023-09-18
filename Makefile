@@ -1,7 +1,7 @@
 .PHONY: test build
 
 test:
-	dune build @check
+	dune build @runtest
 
 build:
 	dune build @all
