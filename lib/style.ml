@@ -52,6 +52,13 @@ let pp_dof fmt dof rgb =
     (pp_rgb ~faint:false)
     rgb
 
+let pp_rdof fmt dof rgb =
+  Fmt.pf fmt ".%s-reversed-default { %s: %a }\n"
+    (match dof with `Fg -> "fg" | `Bg -> "bg")
+    (match dof with `Fg -> "color" | `Bg -> "background")
+    (pp_rgb ~faint:false)
+    rgb
+
 let pp fmt (colors, bright_colors, dof) =
   pp_colors fmt `Fg ~bright:false ~faint:false colors;
   pp_colors fmt `Fg ~bright:false ~faint:true colors;
@@ -61,6 +68,8 @@ let pp fmt (colors, bright_colors, dof) =
   pp_colors fmt `Bg ~bright:true ~faint:false bright_colors;
   pp_dof fmt `Fg dof.fg;
   pp_dof fmt `Bg dof.bg;
+  pp_rdof fmt `Fg dof.bg;
+  pp_rdof fmt `Bg dof.fg;
   Fmt.pf fmt
 {|pre span.bold { font-weight: bold }
 pre span.italic { font-style: italic }
