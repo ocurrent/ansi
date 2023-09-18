@@ -1,8 +1,12 @@
-### unreleased
+### 0.7.0 (2023-09-18)
+
+* Fix CSS for italic. (#18, @haochenx)
+
+* Respect reverse attr when default color is active. (#17, @haochenx)
 
 * Support faint and double underline styles. (#14, @MisterDA)
 
-### 0.6.0
+### 0.6.0 (2022-12-20)
 
 * Support OSC hyperlinks. (#13, @MisterDA)
   https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
@@ -26,7 +30,7 @@
 * Expose alternative 16-colours colorschemes (xterm dark, solarized
   light and dark). (#6, @MisterDA)
 
-### 0.5.0
+### 0.5.0 (2022-03-31)
 
 * Rename to `ansi` (#2, @samoht)
 * ansi: 24-bit colour parsing (#1, @copy)
